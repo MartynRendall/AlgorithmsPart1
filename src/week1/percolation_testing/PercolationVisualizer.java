@@ -20,6 +20,7 @@ import java.awt.Font;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
+import week1.Percolation;
 
 public class PercolationVisualizer {
 

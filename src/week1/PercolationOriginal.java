@@ -1,16 +1,17 @@
+package week1;
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-public class Percolation {
+public class PercolationOriginal {
 
     private WeightedQuickUnionUF weightedQuickUnionUF;
-    private WeightedQuickUnionUF weightedQuickUnionUFNoBottomSite;
     private int[] openSites;
     private int n;
 
     private int topSite;
     private int bottomSite;
 
-    public Percolation(int n) {
+    public PercolationOriginal(int n) {
 
         if (n <= 0) {
             throw new IllegalArgumentException("n should be greater than 0, but its " + n);
@@ -23,30 +24,26 @@ public class Percolation {
 
         // Add an additional 2 to the size to allow a top and bottom sites
         weightedQuickUnionUF = new WeightedQuickUnionUF(gridSize+2);
-
-        // Dont add bottom site so we can safely see if the site is located to topSite not going via bottom site
-        weightedQuickUnionUFNoBottomSite = new WeightedQuickUnionUF(gridSize+1);
-
         openSites = new int[gridSize];
     }
 
     public void open(int i, int j) {
 
-        if (!isOpen(i, j)) {
-            openSites[coordToSite(i, j)] = 1;
+        validatePoint(i, j);
 
-            // if its a top row i.e j= 1 then we should connect this block to the topSite
-            if (i == 1) {
-                connectPoints(topSite, coordToSite(i, j));
-            }
+        openSites[coordToSite(i, j)] = 1;
 
-            // if its a bottom row i.e i = n then we should connect this block to the bottomSite
-            if (i == n) {
-                connectPoints(bottomSite, coordToSite(i, j));
-            }
-
-            connectToNeighbours(i, j);
+        // if its a top row i.e j= 1?? then we should connect this block to the topSite
+        if (i == 1) {
+            connectPoints(topSite, coordToSite(i, j));
         }
+
+        // if its a bottom row i.e i = n?? then we should connect this block to the bottomSite
+        if (i == n) {
+            connectPoints(bottomSite, coordToSite(i, j));
+        }
+
+        connectToNeighbours(i, j);
     }
 
     public boolean isOpen(int i, int j) {
@@ -60,7 +57,7 @@ public class Percolation {
 
         validatePoint(i, j);
 
-        return weightedQuickUnionUFNoBottomSite.connected(topSite, coordToSite(i, j));
+        return weightedQuickUnionUF.connected(topSite, coordToSite(i, j));
     }
 
     public boolean percolates() {
@@ -102,10 +99,6 @@ public class Percolation {
     private void connectPoints(int pointA, int pointB) {
 
         weightedQuickUnionUF.union(pointA, pointB);
-
-        if (pointA <= topSite) { // prevent trying to connect bottom sites
-            weightedQuickUnionUFNoBottomSite.union(pointA, pointB);
-        }
     }
 
     private boolean isValidPoint(int i, int j) {
