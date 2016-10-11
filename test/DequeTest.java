@@ -4,6 +4,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 
@@ -18,12 +19,15 @@ public class DequeTest {
         testee = new Deque<>();
     }
 
+
     @Test
-    public void testIsEmpty() {
-
-
+    public void testIsEmptyStartsEmpty() {
 
         assertTrue(testee.isEmpty());
+    }
+
+    @Test
+    public void testIsEmptyWhenItemsExist() {
 
         testee.addFirst("First item");
 
@@ -32,84 +36,228 @@ public class DequeTest {
     }
 
     @Test
-    public void testAddFirst() {
+    public void testSizeStartsAsZero() {
 
-        List<String> items = new ArrayList<>();
-
-        items.add("One");
-        items.add("Two");
-        items.add("Three");
-        items.add("Four");
-        items.add("Five");
-        items.add("Six");
-
-        for (String item : items) {
-            testee.addFirst(item);
-        }
-
-        Iterator<String> iterator = testee.iterator();
-        int counter = items.size()-1;
-        while (iterator.hasNext()) {
-
-            assertEquals(items.get(counter), iterator.next());
-            counter--;
-        }
+        assertEquals(0, testee.size());
     }
 
     @Test
-    public void testSize() {
-
-        assertEquals(0, testee.size());
+    public void testSizeWithOneItem() {
 
         testee.addFirst("One");
 
         assertEquals(1, testee.size());
+    }
 
+    @Test
+    public void testSizeWithMultipleItems() {
+
+        testee.addFirst("One");
         testee.addFirst("Two");
 
         assertEquals(2, testee.size());
     }
 
     @Test
-     public void testRemoveFirst() {
+    public void testAddFirstWithOne() {
+
+        testee.addFirst("One");
+
+        assertEquals("One", testee.iterator().next());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testAddFirstWitNullItem() {
+
+        testee.addFirst(null);
+    }
+
+    @Test
+    public void testAddFirstWithMultiple() {
+
+        testee.addFirst("One");
+        testee.addFirst("Two");
+        testee.addFirst("Three");
+
+        Iterator<String> iterator = testee.iterator();
+        assertEquals("Three", iterator.next());
+        assertEquals("Two", iterator.next());
+        assertEquals("One", iterator.next());
+    }
+
+    @Test
+    public void addLastOnEmptyList() {
+
+        testee.addLast("One");
+
+        assertEquals(1, testee.size());
+        assertEquals("One", testee.iterator().next());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void addLastWithNullitem() {
+
+        testee.addFirst("Boom");
+        testee.addLast(null);
+    }
+
+    @Test
+    public void addLastOnNonEmptyList() {
+
+        testee.addFirst("Two");
+        testee.addFirst("One");
+
+        testee.addLast("Three");
+
+        assertEquals(3, testee.size());
+        Iterator<String> iterator = testee.iterator();
+        assertEquals("One", iterator.next());
+        assertEquals("Two", iterator.next());
+        assertEquals("Three", iterator.next());
+    }
+    
+    @Test
+    public void testAddLastMultipleCalls() {
+        
+        testee.addLast("Second last");
+        testee.addLast("Really last");
+        
+        assertEquals(2, testee.size());
+        Iterator<String> iterator = testee.iterator();
+        assertEquals("Second last", iterator.next());
+        assertEquals("Really last", iterator.next());
+        
+    }
+
+
+    @Test(expected = NoSuchElementException.class)
+    public void testRemoveFirstWithNoItems() {
+
+        testee.removeFirst();
+    }
+
+    @Test
+    public void testRemoveFirstReturnsItem() {
 
         testee.addFirst("One");
 
         assertEquals("One", testee.removeFirst());
-
     }
 
     @Test
     public void testRemoveFirstReOrdersItems() {
 
-        List<String> items = new ArrayList<>();
+        testee.addFirst("One");
+        testee.addFirst("Two");
 
-        items.add("One");
-        items.add("Two");
-        items.add("Three");
+        testee.removeFirst();
 
-        for (String item : items) {
-            testee.addFirst(item);
-        }
+        assertEquals("One", testee.iterator().next());
+    }
 
-        assertEquals("Three", testee.removeFirst());
+    @Test(expected = NoSuchElementException.class)
+    public void testRemoveLastWithNoElements() {
 
-        Iterator<String> iterator = testee.iterator();
-        int counter = items.size()-2;
-        while (iterator.hasNext()) {
-
-            assertEquals(items.get(counter), iterator.next());
-            counter--;
-        }
-
-
-
+        testee.removeLast();
     }
 
     @Test
-    public void testRemoveFirstOnEmpty() {
+    public void testRemoveLastWithOneElement() {
 
-        assertEquals("One", testee.removeFirst());
+        testee.addFirst("One");
 
+        assertEquals("One", testee.removeLast());
+        assertEquals(0, testee.size());
+    }
+
+    @Test
+    public void testRemoveLastWithMultipleElement() {
+
+        testee.addLast("One");
+        testee.addLast("Two");
+        testee.addLast("Three");
+
+        assertEquals("Three", testee.removeLast());
+        assertEquals(2, testee.size());
+    }
+
+    @Test
+    public void testRemoveLastCalledMultipleTimes() {
+
+        testee.addLast("One");
+        testee.addLast("Two");
+
+        assertEquals("Two", testee.removeLast());
+        assertEquals("One", testee.removeLast());
+        assertEquals(0, testee.size());
+    }
+
+    @Test
+    public void testIteratorHasNextWithNoItems () {
+
+        assertFalse(testee.iterator().hasNext());
+    }
+
+    @Test
+    public void testIteratorHasNextWithItem () {
+
+        testee.addFirst("One");
+
+        assertTrue(testee.iterator().hasNext());
+    }
+
+    @Test
+    public void testIteratorHasNextAtLastItem () {
+
+        testee.addLast("One");
+        testee.addLast("Two");
+
+        Iterator<String> iterator = testee.iterator();
+        iterator.next();
+        iterator.next();
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testIteratorHasNextHalfWayThrough () {
+
+        testee.addLast("One");
+        testee.addLast("Two");
+
+        Iterator<String> iterator = testee.iterator();
+        iterator.next();
+        assertTrue(iterator.hasNext());
+    }
+
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testIteratorRemove () {
+
+        testee.iterator().remove();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorNextWithNoItems () {
+
+        testee.iterator().next();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testIteratorNextWhenAtEnd () {
+
+        testee.addLast("Last");
+        Iterator<String> iterator = testee.iterator();
+        iterator.next();
+        iterator.next();
+    }
+
+    @Test
+    public void testNextReturnsCorrectItem() {
+        testee.addLast("One");
+        testee.addLast("Two");
+
+        Iterator<String> iterator = testee.iterator();
+        assertEquals("One", iterator.next());
+        assertEquals("Two", iterator.next());
     }
 }
