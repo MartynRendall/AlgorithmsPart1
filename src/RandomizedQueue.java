@@ -105,6 +105,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public RandomizedQueueIterator() {
 //            StdRandom.shuffle(elements);
+
+            for (int i = 0; i < shuffledIndexes.length; i++) {
+                shuffledIndexes[i] = i;
+            }
+
             StdRandom.shuffle(shuffledIndexes);
         }
 

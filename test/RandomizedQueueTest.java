@@ -216,4 +216,30 @@ public class RandomizedQueueTest {
         testee.dequeue();
         testee.enqueue(103);
     }
+
+    @Test
+    public void randomIteration() {
+
+        testee.enqueue("One");
+        testee.enqueue("Two");
+        testee.enqueue("Three");
+        testee.enqueue("Four");
+        testee.enqueue("Five");
+        testee.enqueue("Six");
+        testee.enqueue("Seven");
+        testee.enqueue("Eight");
+        testee.enqueue("Nine");
+        testee.enqueue("Ten");
+
+        Iterator iter = testee.iterator();
+        while (iter.hasNext()) {
+            System.out.println(iter.next());
+        }
+
+        System.out.println("\n\n");
+        Iterator iter2 = testee.iterator();
+        while (iter2.hasNext()) {
+            System.out.println(iter2.next());
+        }
+    }
 }
