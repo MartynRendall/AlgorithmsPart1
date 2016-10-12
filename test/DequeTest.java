@@ -260,4 +260,44 @@ public class DequeTest {
         assertEquals("One", iterator.next());
         assertEquals("Two", iterator.next());
     }
+
+    @Test
+    public void nonEmptyToEmptyBackToNonEmpty() {
+
+        testee.addLast("Last");
+        testee.removeLast();
+        testee.addFirst("First");
+
+        assertEquals(1, testee.size());
+    }
+
+    @Test
+    public void failingTest2a() {
+
+        Deque<Integer> testee = new Deque<>();
+
+        assertTrue(testee.isEmpty());
+        testee.addFirst(1);
+
+        assertEquals(new Integer(1), testee.removeFirst());
+
+        assertTrue(testee.isEmpty());
+    }
+
+    @Test
+    public void failingTest2b() {
+
+        Deque<Integer> testee = new Deque<>();
+
+        testee.isEmpty();
+        testee.addFirst(1);
+        testee.removeFirst();
+        testee.addFirst(3);
+        testee.removeFirst();
+        testee.addFirst(5);
+        testee.removeFirst();
+
+
+        assertTrue(testee.isEmpty());
+    }
 }

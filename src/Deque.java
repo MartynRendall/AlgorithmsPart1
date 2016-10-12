@@ -4,8 +4,11 @@ import java.util.NoSuchElementException;
 public class Deque<Item> implements Iterable<Item> {
 
     private Node first;
+    private int size;
 
     public Deque() {
+        first = null;
+        size = 0;
     }
 
     public boolean isEmpty() {
@@ -14,16 +17,6 @@ public class Deque<Item> implements Iterable<Item> {
     }
 
     public int size() {
-
-        int size = 0;
-
-        if (!isEmpty()) {
-            Node n = first;
-            while (n != null) {
-                size++;
-                n = n.next;
-            }
-        }
 
         return size;
     }
@@ -34,18 +27,12 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NullPointerException("Cant add null item to deque");
         }
 
-        if ( first == null ) {
-            first = new Node();
-            first.item = item;
-            first.next = null;
-        } else {
-            Node n = new Node();
+        Node node = new Node();
+        node.item = item;
+        node.next = first;
 
-            n.item = item;
-            n.next = first;
-
-            first = n;
-        }
+        first = node;
+        size++;
     }
 
     public void addLast(Item item) {
@@ -54,21 +41,17 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NullPointerException("Cant add null item");
         }
 
-        if (isEmpty()) {
-            addFirst(item);
+        Node node = new Node();
+        node.item = item;
+        node.next = null;
 
+        if (!isEmpty()) {
+            getLastNode().next = node;
         } else {
-
-            Node lastNode = getLastNode();
-
-            Node n = new Node();
-            n.next = null;
-            n.item = item;
-
-            lastNode.next = n;
-
+            first = node;
         }
 
+        size++;
     }
 
     private Node getLastNode() {
@@ -77,6 +60,7 @@ public class Deque<Item> implements Iterable<Item> {
         while (lastNode.next != null) {
             lastNode = lastNode.next;
         }
+
         return lastNode;
     }
 
@@ -86,14 +70,17 @@ public class Deque<Item> implements Iterable<Item> {
             throw new NoSuchElementException("No element exists");
         }
 
-        Node n = first;
+        Node node = first;
 
-        if (n.next != null) {
-            first = n.next;
+        if (first.next != null) {
+            first = node.next;
+        } else {
+            first = null;
         }
 
+        size--;
 
-        return n.item;
+        return node.item;
     }
 
     public Item removeLast() {
@@ -103,19 +90,22 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         Node lastNode = first;
-        Node previousNode = null;
+        Node secondLastNode = null;
 
-        while (lastNode.next != null ) {
+        while (lastNode.next != null) {
 
-            previousNode = lastNode;
+            secondLastNode = lastNode;
             lastNode = lastNode.next;
         }
 
-        if (previousNode == null) {
+        if (secondLastNode == null) {
             first = null; // if no previous node then we must be dealing with the first node, so remove it
         } else {
-            previousNode.next = null;
+            secondLastNode.next = null;
         }
+
+        size--;
+
         return lastNode.item;
     }
 
@@ -144,6 +134,7 @@ public class Deque<Item> implements Iterable<Item> {
             if (current == null) {
                 throw new NoSuchElementException("No elements present in the deque");
             }
+
             Item item = current.item;
             current = current.next;
 
