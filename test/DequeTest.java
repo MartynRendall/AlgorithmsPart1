@@ -300,4 +300,41 @@ public class DequeTest {
 
         assertTrue(testee.isEmpty());
     }
+
+    @Test
+    public void failingTest3() {
+        Deque<Integer> testee = new Deque<>();
+
+        testee.addFirst(0);
+        testee.addFirst(1);
+        testee.removeLast();
+    }
+
+    @Test
+    public void failingTest3b() {
+        Deque<Integer> testee = new Deque<>();
+
+        testee.addFirst(0);
+        testee.addFirst(1);
+        testee.addFirst(2);
+        testee.removeLast();
+        testee.addFirst(4);
+        testee.addFirst(5);
+        testee.addFirst(6);
+        testee.isEmpty();
+        assertEquals(new Integer(1), testee.removeLast());
+    }
+
+    @Test
+    public void memoryTesting() {
+
+        testee.addLast("One");
+        testee.addLast("Two");
+        testee.addLast("Three");
+
+        testee.removeLast();
+        testee.removeLast();
+        testee.removeLast();
+
+    }
 }

@@ -8,10 +8,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private Item[] elements;
     private int size;
+    private int initSize = 2;
 
     public RandomizedQueue() {
 
-        elements = (Item[]) new Object[2];
+        elements = (Item[]) new Object[initSize];
         size = 0;
     }
 
@@ -31,7 +32,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         if (elements.length == size) {
-            elements = Arrays.copyOf(elements, elements.length*2);
+            // If elements.size is 0 then the copyOf would return a 0 sized array. We need to ensure the array does not drop below
+            //  a size of initSize
+            elements = Arrays.copyOf(elements, ((elements.length == 0) ? initSize : elements.length*2));
         }
 
         elements[size++] = item;
@@ -44,46 +47,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         int randomIndex = StdRandom.uniform(size);
-//        int randomIndex = 0;
 
         Item removed = elements[randomIndex];
         elements[randomIndex] = elements[size-1];
         elements[size-1] = null;
         size--;
 
-        //TODO resize when arrary is too large
-
-//        rebuildArray(randomIndex);
-
-
+        if ((elements.length / 4) > size) {
+            elements = Arrays.copyOfRange(elements, 0, size);
+        }
 
         return removed;
     }
-
-    private void rebuildArray(int randomIndex) {
-
-//        Item[] items = (Item[]) new Object[elements.length];
-////        Item[] items = (Item[]) new Object[size];
-//
-//        int index = 0;
-//
-//        for (Item item : Arrays.copyOfRange(elements, 0, randomIndex)) {
-//
-//            items[index] = item;
-//            index++;
-//        }
-//
-//        for (Item item :  Arrays.copyOfRange(elements, randomIndex+1, size+1)) {
-////        for (Item item :  Arrays.copyOfRange(elements, randomIndex+1, elements.length+1)) {
-//
-//            items[index] = item;
-//            index++;
-//        }
-//
-//        elements = items;
-
-    }
-
 
     public Item sample() {
 
@@ -104,7 +79,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         private int[] shuffledIndexes = new int[size];
 
         public RandomizedQueueIterator() {
-//            StdRandom.shuffle(elements);
 
             for (int i = 0; i < shuffledIndexes.length; i++) {
                 shuffledIndexes[i] = i;
@@ -130,13 +104,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
                 throw new NoSuchElementException("No next item");
             }
 
-//            Item element = elements[currentIndex++];
-
-//            while (element == null) {
-//                element = elements[currentIndex++];
-//            }
-//            return element;
-            //return elements[currentIndex++];
             return elements[shuffledIndexes[currentIndex++]];
         }
     }

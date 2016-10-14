@@ -242,4 +242,26 @@ public class RandomizedQueueTest {
             System.out.println(iter2.next());
         }
     }
+
+    @Test
+    public void forceResizing() {
+
+        RandomizedQueue<Integer> testee = new RandomizedQueue<>();
+
+        int maxSize = 3;
+
+        for (int i=0; i < maxSize; i++) {
+            testee.enqueue(i);
+        }
+
+        assertEquals(maxSize, testee.size());
+
+        for (int i=0; i < maxSize; i++) {
+            testee.dequeue();
+        }
+
+        assertEquals(0, testee.size());
+
+        testee.enqueue(0);
+    }
 }
