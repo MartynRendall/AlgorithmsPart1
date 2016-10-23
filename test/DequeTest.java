@@ -1,9 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
+import week2.Deque;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
