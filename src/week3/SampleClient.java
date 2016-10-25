@@ -1,3 +1,5 @@
+package week3;
+
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
@@ -26,7 +28,7 @@ public class SampleClient {
         StdDraw.show();
 
         // print and draw the line segments
-//        BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+//        week3.BruteCollinearPoints collinear = new week3.BruteCollinearPoints(points);
         FastCollinearPoints collinear = new FastCollinearPoints(points);
         for (LineSegment segment : collinear.segments()) {
             StdOut.println(segment);

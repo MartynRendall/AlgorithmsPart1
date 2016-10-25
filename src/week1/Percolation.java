@@ -118,7 +118,7 @@ public class Percolation {
     private void validatePoint(int i, int j) {
 
         if (!isValidPoint(i, j)) {
-            throw new IndexOutOfBoundsException("Point " + i + ", " + j + " is invalid");
+            throw new IndexOutOfBoundsException("week3.Point " + i + ", " + j + " is invalid");
         }
     }
 
